@@ -13,6 +13,7 @@ import extensionLibraryContent, {
 import extensionTags from '../lib/libraries/tw-extension-tags';
 
 import LibraryComponent from '../components/library/library.jsx';
+import styles from '../components/library/library.css';
 import extensionIcon from '../components/action-menu/icon--sprite.svg';
 
 const messages = defineMessages({
@@ -179,6 +180,7 @@ class ExtensionLibrary extends React.PureComponent {
 
         return (
             <LibraryComponent
+                className={styles.extensionLibrary}
                 data={library}
                 filterable
                 persistableKey="extensionId"

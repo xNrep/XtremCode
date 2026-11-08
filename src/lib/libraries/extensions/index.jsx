@@ -386,7 +386,7 @@ export default [
         name: (
             <FormattedMessage
                 defaultMessage="{APP_NAME} Blocks"
-                description="Name of the strange 'TurboWarp Blocks' extension"
+                description="Name of the XtremCode Blocks extension"
                 id="tw.twExtension.name"
                 values={{
                     APP_NAME
@@ -398,7 +398,7 @@ export default [
         description: (
             <FormattedMessage
                 defaultMessage="Weird new blocks."
-                description="Description of the strange 'TurboWarp Blocks' extension"
+                description="Description of the XtremCode Blocks extension"
                 id="tw.twExtension.description"
             />
         ),
@@ -472,7 +472,7 @@ export const galleryMore = {
     description: (
         <FormattedMessage
             // eslint-disable-next-line max-len
-            defaultMessage="Learn more about extensions at extensions.turbowarp.org."
+            defaultMessage="Browse more extensions in the XtremCode extension gallery."
             description="Appears after the extension list from the gallery was loaded successfully"
             id="tw.extensionGallery.more"
         />
@@ -498,7 +498,7 @@ export const galleryError = {
     description: (
         <FormattedMessage
             // eslint-disable-next-line max-len
-            defaultMessage="Error loading extension gallery. Visit extensions.turbowarp.org to find more extensions."
+            defaultMessage="Error loading extension gallery. Try again later to browse more extensions."
             description="Appears when an error occurred loading extension list from the custom extension gallery"
             id="tw.extensionGallery.error"
         />

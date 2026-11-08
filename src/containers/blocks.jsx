@@ -11,6 +11,7 @@ import VM from 'scratch-vm';
 import log from '../lib/log.js';
 import Prompt from './prompt.jsx';
 import BlocksComponent from '../components/blocks/blocks.jsx';
+import XtremCodeEditor from '../components/blocks/xtremcode-editor.jsx';
 import ExtensionLibrary from './extension-library.jsx';
 import extensionData from '../lib/libraries/extensions/index.jsx';
 import CustomProcedures from './custom-procedures.jsx';
@@ -70,6 +71,11 @@ const messages = defineMessages({
         // eslint-disable-next-line max-len
         description: 'Button in extension list to learn how to use the "return" block from the Custom Reporters extension.',
         id: 'tw.blocks.PROCEDURES_DOCS'
+    },
+    EDIT_XTREMCODE: {
+        defaultMessage: 'Edit XtremCode format',
+        description: 'Tooltip for opening the XtremCode text representation of the block workspace',
+        id: 'tw.blocks.editXtremCode'
     }
 });
 
@@ -122,14 +128,18 @@ class Blocks extends React.Component {
             'onWorkspaceMetricsChange',
             'setBlocks',
             'setLocale',
-            'handleEnableProcedureReturns'
+            'handleEnableProcedureReturns',
+            'handleOpenXtremCode',
+            'handleCloseXtremCode',
+            'handleApplyXtremCode'
         ]);
         this.ScratchBlocks.prompt = this.handlePromptStart;
         this.ScratchBlocks.statusButtonCallback = this.handleConnectionModalStart;
         this.ScratchBlocks.recordSoundCallback = this.handleOpenSoundRecorder;
 
         this.state = {
-            prompt: null
+            prompt: null,
+            xtremCodeEditorOpen: false
         };
         this.onTargetsUpdate = debounce(this.onTargetsUpdate, 100);
         this.toolboxUpdateQueue = [];
@@ -233,6 +243,7 @@ class Blocks extends React.Component {
     shouldComponentUpdate (nextProps, nextState) {
         return (
             this.state.prompt !== nextState.prompt ||
+            this.state.xtremCodeEditorOpen !== nextState.xtremCodeEditorOpen ||
             this.props.isVisible !== nextProps.isVisible ||
             this._renderedToolboxXML !== nextProps.toolboxXML ||
             this.props.extensionLibraryVisible !== nextProps.extensionLibraryVisible ||
@@ -662,6 +673,45 @@ class Blocks extends React.Component {
         this.workspace.enableProcedureReturns();
         this.requestToolboxUpdate();
     }
+    handleOpenXtremCode () {
+        const xml = this.ScratchBlocks.Xml.workspaceToDom(this.workspace);
+        this.setState({
+            xtremCodeEditorOpen: true,
+            xtremCodeSource: this.ScratchBlocks.Xml.domToPrettyText(xml)
+        });
+    }
+    handleCloseXtremCode () {
+        this.setState({xtremCodeEditorOpen: false});
+    }
+    handleApplyXtremCode (source) {
+        const xml = this.ScratchBlocks.Xml.textToDom(source);
+        if (xml.nodeName.toLowerCase() !== 'xml') {
+            throw new Error('The source must have an <xml> root element.');
+        }
+
+        const blockElements = [
+            ...xml.getElementsByTagName('block'),
+            ...xml.getElementsByTagName('shadow')
+        ];
+        const unknownBlock = blockElements.find(element => (
+            !this.ScratchBlocks.Blocks[element.getAttribute('type')]
+        ));
+        if (unknownBlock) {
+            throw new Error(`Unknown block type: ${unknownBlock.getAttribute('type')}`);
+        }
+
+        const previousWorkspace = this.ScratchBlocks.Xml.workspaceToDom(this.workspace);
+        try {
+            this.ScratchBlocks.Xml.clearWorkspaceAndLoadFromXml(xml, this.workspace);
+        } catch (error) {
+            this.ScratchBlocks.Xml.clearWorkspaceAndLoadFromXml(previousWorkspace, this.workspace);
+            throw error;
+        }
+        this.workspace.clearUndo();
+        this.props.vm.refreshWorkspace();
+        this.requestToolboxUpdate();
+        this.setState({xtremCodeEditorOpen: false});
+    }
     render () {
         /* eslint-disable no-unused-vars */
         const {
@@ -695,9 +745,18 @@ class Blocks extends React.Component {
             <React.Fragment>
                 <DroppableBlocks
                     componentRef={this.setBlocks}
+                    codeFormatLabel={this.props.intl.formatMessage(messages.EDIT_XTREMCODE)}
                     onDrop={this.handleDrop}
+                    onOpenCodeFormat={this.handleOpenXtremCode}
                     {...props}
                 />
+                {this.state.xtremCodeEditorOpen ? (
+                    <XtremCodeEditor
+                        source={this.state.xtremCodeSource}
+                        onApply={this.handleApplyXtremCode}
+                        onClose={this.handleCloseXtremCode}
+                    />
+                ) : null}
                 {this.state.prompt ? (
                     <Prompt
                         defaultValue={this.state.prompt.defaultValue}

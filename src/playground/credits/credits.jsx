@@ -93,7 +93,7 @@ const Credits = () => (
             <UserList users={UserData.addonDevelopers} />
         </section>
         <section>
-            <h2>TurboWarp Extension Gallery</h2>
+            <h2>Extension Gallery Contributors</h2>
             <UserList users={UserData.extensionDevelopers} />
         </section>
         <section>

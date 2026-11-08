@@ -256,6 +256,7 @@ class LibraryComponent extends React.Component {
         const filteredData = this.state.canDisplay && this.props.data && this.getFilteredData();
         return (
             <Modal
+                className={this.props.className}
                 fullScreen
                 contentLabel={this.props.title}
                 id={this.props.id}
@@ -385,6 +386,7 @@ LibraryComponent.propTypes = {
         PropTypes.instanceOf(Promise)
     ]),
     filterable: PropTypes.bool,
+    className: PropTypes.string,
     id: PropTypes.string.isRequired,
     persistableKey: PropTypes.string,
     intl: intlShape.isRequired,

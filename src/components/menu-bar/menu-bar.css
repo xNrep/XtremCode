@@ -28,9 +28,11 @@
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: $menu-bar-standard-font-size;
     font-weight: bold;
-    background-color: $menu-bar-background;
-    background-image: $menu-bar-background-image;
-    color: $menu-bar-foreground;
+    background-color: #07111d;
+    background-image: linear-gradient(90deg, #07111d 0%, #0b1c2a 62%, #111327 100%);
+    border-bottom: 1px solid rgba(32, 246, 229, 0.38);
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.32), 0 1px 8px rgba(32, 246, 229, 0.1);
+    color: #e6f5ff;
 }
 
 .main-menu {
@@ -71,7 +73,8 @@
 
 .menu-bar-item.active,
 .menu-bar-item.hoverable:hover {
-    background-color: $ui-black-transparent;
+    background-color: rgba(32, 246, 229, 0.12);
+    color: #20f6e5;
 }
 
 .menu-bar-item.growable {

@@ -68,3 +68,54 @@
     align-items: center;
     justify-content: center;
 }
+
+.extension-library {
+    background-color: #08131f;
+}
+
+.extension-library .filter-bar {
+    flex: 0 0 auto;
+    min-height: 3.5rem;
+    height: auto;
+    border-bottom: 1px solid rgba(32, 246, 229, 0.24);
+    background-color: #0b1928;
+}
+
+.extension-library .tag-wrapper {
+    height: auto;
+    max-height: $library-filter-bar-height;
+    overflow: auto;
+}
+
+.extension-library .library-scroll-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    align-content: start;
+    gap: 0.75rem;
+    min-height: 0;
+    height: auto;
+    padding: 1rem;
+}
+
+.extension-library .library-scroll-grid.withFilterBar {
+    flex: 1;
+}
+
+.extension-library .library-scroll-grid > :global([class*="library-item_library-item"]) {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+}
+
+.extension-library .library-scroll-grid > :global([class*="library-item_featured-item"]) {
+    height: 100%;
+}
+
+.extension-library :global([class*="library-item_featured-text"]),
+.extension-library :global([class*="library-item_extension-links"]) {
+    width: 100%;
+}
+
+.extension-library :global([class*="separator_separator"]) {
+    grid-column: 1 / -1;
+}
